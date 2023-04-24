@@ -1,28 +1,25 @@
-const express = require("express");
-const mongoose = require("mongoose");
-
-const userRoutes = require("./routes/userRoutes");
+const express = require('express');
+const mongoose = require('mongoose');
+const userRoutes = require('./src/routes/userRoutes');
 
 const app = express();
+const port = 3000;
 
-// Connect to MongoDB
-mongoose.connect(
-  "mongodb+srv://diksha170280411:diksha170280@cluster1.7rmns9c.mongodb.net/test",
-  { useNewUrlParser: true, useUnifiedTopology: true }
-).then(()=>{
-  console.log("connected");
-});
+mongoose
+  .connect('mongodb+srv://diksha170280411:diksha170280@cluster1.7rmns9c.mongodb.net/test', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log('Connected to MongoDB');
+  })
+  .catch((err) => {
+    console.log('Failed to connect to MongoDB', err);
+  });
 
-// Parse incoming requests with JSON payloads
 app.use(express.json());
+app.use('/api', userRoutes);
 
-// Use User Routes
-app.use("/users", userRoutes);
-
-app.get("/", (req, res) => res.send("Hello"))
-
-// Start the server
-const port = process.env.PORT || 5000;
-app.listen(port, function () {
-  console.log(`Server listening on port ${port}`);
+app.listen(port, () => {
+  console.log(`Server started on port ${port}`);
 });
